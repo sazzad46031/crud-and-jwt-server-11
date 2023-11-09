@@ -55,6 +55,29 @@ async function run() {
         const result = await foodRequestCollection.insertOne(newRequest)
         res.send(result)
     })
+    app.put('/foods/:id', async(req,res)=>{
+        const id = req.params.id
+        const filter ={ _id: new ObjectId(id) }
+        const options = {upsert: true}
+        const updateFood =req.body
+        const food = {
+            $set:{
+                foodName : updateFood.foodName,
+                foodImage : updateFood.foodImage,
+                foodQuantity : updateFood.foodQuantity,
+                pickupLocation: updateFood.pickupLocation,
+                expiredDate : updateFood.expiredDate,
+                additionalNotes : updateFood.additionalNotes,
+                foodStatus : updateFood.foodStatus,
+                donatorName : updateFood.donatorName,
+                donatorEmail : updateFood.donatorEmail,
+                donatorImage : updateFood.donatorImage
+            }
+        }
+
+        const result = await foodCollection.updateOne( filter, food, options)
+        res.send( result )
+    })
     app.delete('/foods/:id', async(req,res)=>{
         const id = req.params.id
         const query = { _id: new ObjectId(id) }
